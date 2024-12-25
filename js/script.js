@@ -208,6 +208,7 @@ async function main() {
             document.getElementById('volume-slider').value = previousVolume;
         }
     });
+  }
 }
 
 main();
