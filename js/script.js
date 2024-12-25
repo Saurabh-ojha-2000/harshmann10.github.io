@@ -18,19 +18,23 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
     cfolder = folder;
-    let a = await fetch(`songs/${folder}/`);
-    let response = await a.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a");
+    try {
+        let a = await fetch(`songs/${folder}/`);
+        let response = await a.text();
+        let div = document.createElement("div");
+        div.innerHTML = response;
+        let as = div.getElementsByTagName("a");
 
-    songs = [];
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1].replace(".mp3", ""));
+        songs = [];
+        for (let index = 0; index < as.length; index++) {
+            const element = as[index];
+            if (element.href.endsWith(".mp3")) {
+                songs.push(element.href.split(`/${folder}/`)[1].replace(".mp3", ""));
+            }
         }
-    }
+
+        // Debugging: Log the parsed links
+        console.log("Parsed songs:", songs);
 
     //show all the song in playlist
     let songul = document.querySelector(".songlist").getElementsByTagName("ul")[0];
@@ -58,7 +62,10 @@ async function getSongs(folder) {
     });
 
     return songs; // Return the updated songs array
-}
+}catch (error) {
+        console.error("Error fetching songs:", error);
+        return [];
+    }
 
 const playMusic = (track, pause = false) => {
     // var audio = new Audio("songs/" + track +".mp3");
