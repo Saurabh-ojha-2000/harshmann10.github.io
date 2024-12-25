@@ -62,7 +62,7 @@ async function getSongs(folder) {
 
 const playMusic = (track, pause = false) => {
     // var audio = new Audio("songs/" + track +".mp3");
-    currentSong.src = `${cfolder}/` + track + ".mp3";
+    currentSong.src = `songs/${cfolder}/` + track + ".mp3";
     if (!pause) {
         currentSong.play();
         play.src = "./img/pause.svg";
