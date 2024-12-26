@@ -18,23 +18,21 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
     cfolder = folder;
-    try {
-        let a = await fetch(`songs/${folder}/`);
-        let response = await a.text();
-        let div = document.createElement("div");
-        div.innerHTML = response;
-        let as = div.getElementsByTagName("a");
+    let a = await fetch(`${folder}/`);
+    let response = await a.text();
+    let div = document.createElement("div");
+    div.innerHTML = response;
+    let as = div.getElementsByTagName("a");
 
-        songs = [];
-        for (let index = 0; index < as.length; index++) {
-            const element = as[index];
-            if (element.href.endsWith(".mp3")) {
-                songs.push(element.href.split(`/${folder}/`)[1].replace(".mp3", ""));
-            }
+    songs = [];
+    for (let index = 0; index < as.length; index++) {
+        const element = as[index];
+        if (element.href.endsWith(".mp3")) {
+            songs.push(element.href.split(`/${folder}/`)[1].replace(".mp3", ""));
         }
+    }
 
-        // Debugging: Log the parsed links
-        console.log("Parsed songs:", songs);
+    console.log("Songs array updated:", songs);
 
     //show all the song in playlist
     let songul = document.querySelector(".songlist").getElementsByTagName("ul")[0];
@@ -62,14 +60,11 @@ async function getSongs(folder) {
     });
 
     return songs; // Return the updated songs array
-}catch (error) {
-        console.error("Error fetching songs:", error);
-        return [];
-    }
+}
 
 const playMusic = (track, pause = false) => {
     // var audio = new Audio("songs/" + track +".mp3");
-    currentSong.src = `songs/${cfolder}/` + track + ".mp3";
+    currentSong.src = `${cfolder}/` + track + ".mp3";
     if (!pause) {
         currentSong.play();
         play.src = "./img/pause.svg";
@@ -77,11 +72,11 @@ const playMusic = (track, pause = false) => {
     document.querySelector(".songinfo").innerText = decodeURI(track);
     document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 
-    // console.log("Playing track:", track);
+    console.log("Playing track:", track);
 }
 
 async function displayAlbums() {
-    let a = await fetch(`songs/`);
+    let a = await fetch(`./songs/`);
     let response = await a.text();
     let div = document.createElement("div");
     div.innerHTML = response;
@@ -92,7 +87,7 @@ async function displayAlbums() {
         const e = array[index];
             if (e.href.includes("songs")) {
                 folder = e.href.split("/").slice(-2)[0];
-                let a = await fetch(`songs/${folder}/info.json`);
+                let a = await fetch(`./songs/${folder}/info.json`);
                 let response = await a.json();
                 console.log(response);
                 cardContainer.innerHTML += `<div data-folder="${folder}" class="card">
@@ -104,7 +99,7 @@ async function displayAlbums() {
                                         stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
                                 </svg>
                             </div>
-                            <img src="songs/${folder}/cover.jpg" alt="">
+                            <img src="./songs/${folder}/cover.jpg" alt="">
                             <h2>${response.title}</h2>
                             <p>${response.description}</p>
                         </div>`
@@ -126,7 +121,7 @@ let previousVolume;
 async function main() {
 
     // get all songs
-    await getSongs("/songs/punjabi");
+    await getSongs("songs/punjabi");
     console.log(songs);
     playMusic(songs[0], true);
 
@@ -208,7 +203,6 @@ async function main() {
             document.getElementById('volume-slider').value = previousVolume;
         }
     });
-  }
 }
 
 main();
