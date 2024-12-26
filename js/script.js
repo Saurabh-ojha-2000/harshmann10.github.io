@@ -120,7 +120,7 @@ let previousVolume;
 async function main() {
 
     // get all songs
-    await getSongs("songs/punjabi");
+    await getSongs("../songs/punjabi");
     console.log(songs);
     playMusic(songs[0], true);
 
