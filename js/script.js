@@ -17,18 +17,17 @@ function secondsToMinutesSeconds(seconds) {
 }
 
 async function getSongs(folder) {
-    cfolder = folder;
-    let a = await fetch(`${folder}/`);
+    cFolder = folder;
+    let a = await fetch(`/${folder}/`)
     let response = await a.text();
-    let div = document.createElement("div");
+    let div = document.createElement("div")
     div.innerHTML = response;
-    let as = div.getElementsByTagName("a");
-
-    songs = [];
+    let as = div.getElementsByTagName("a")
+    songs = []
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
         if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1].replace(".mp3", ""));
+            songs.push(element.href.split(`/${folder}/`)[1])
         }
     }
 
@@ -62,7 +61,7 @@ async function getSongs(folder) {
 
 const playMusic = (track, pause = false) => {
     // var audio = new Audio("songs/" + track +".mp3");
-    currentSong.src = `${cfolder}/` + track + ".mp3";
+    currentSong.src = `${cfolder}/` + track;
     if (!pause) {
         currentSong.play();
         play.src = "./img/pause.svg";
@@ -70,10 +69,11 @@ const playMusic = (track, pause = false) => {
     document.querySelector(".songinfo").innerText = decodeURI(track);
     document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 
-    // console.log("Playing track:", track);
+    console.log("Playing track:", track);
 }
 
 async function displayAlbums() {
+    console.log("displaying albums");
     let a = await fetch(`/songs/`);
     let response = await a.text();
     let div = document.createElement("div");
@@ -83,7 +83,7 @@ async function displayAlbums() {
     let array = Array.from(anchor);
     for (let index = 0; index < array.length; index++) {
         const e = array[index];
-            if (e.href.includes("songs")) {
+            if (e.href.includes("/songs")) {
                 folder = e.href.split("/").slice(-2)[0];
                 let a = await fetch(`/songs/${folder}/info.json`);
                 let response = await a.json();
@@ -107,6 +107,7 @@ async function displayAlbums() {
     //load the playlist whenever card is clicked
     Array.from(document.getElementsByClassName("card")).forEach(e => {
         e.addEventListener("click", async item => {
+            console.log("Fetching Songs");
             console.log(item.currentTarget.dataset.folder);
             songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`);
             playMusic(songs[0], false); // Play the first song in the new playlist
