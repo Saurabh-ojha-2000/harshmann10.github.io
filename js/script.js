@@ -132,7 +132,11 @@ async function main() {
     // get all songs
     await getSongs("songs/punjabi");
     console.log(songs);
-    playMusic(songs[0], true);
+    if (songs.length > 0) {
+        playMusic(songs[0], true);
+    } else {
+        console.error("No songs found in the folder.");
+    }
 
     //display all the albums on the page
     displayAlbums();
