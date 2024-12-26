@@ -18,8 +18,10 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
     cfolder = folder;
+    console.log(`Fetching songs from folder: ${folder}`);
     let a = await fetch(`${folder}/`);
     let response = await a.text();
+    console.log(`Fetched response: ${response}`);
     let div = document.createElement("div");
     div.innerHTML = response;
     let as = div.getElementsByTagName("a");
@@ -63,7 +65,11 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
-    // var audio = new Audio("songs/" + track +".mp3");
+    if (!track) {
+        console.error("Track is undefined");
+        return;
+    }
+    console.log(`Playing track: ${track}`);
     currentSong.src = `${cfolder}/` + track + ".mp3";
     if (!pause) {
         currentSong.play();
@@ -71,8 +77,6 @@ const playMusic = (track, pause = false) => {
     }
     document.querySelector(".songinfo").innerText = decodeURI(track);
     document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
-
-    console.log("Playing track:", track);
 }
 
 async function displayAlbums() {
