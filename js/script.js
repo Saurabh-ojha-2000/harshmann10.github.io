@@ -20,6 +20,10 @@ async function getSongs(folder) {
     cfolder = folder;
     console.log(`Fetching songs from folder: ${folder}`);
     let a = await fetch(`${folder}/`);
+    if (!a.ok) {
+        console.error(`Failed to fetch songs from folder: ${folder}`);
+        return [];
+    }
     let response = await a.text();
     console.log(`Fetched response: ${response}`);
     let div = document.createElement("div");
@@ -30,7 +34,8 @@ async function getSongs(folder) {
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
         if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1].replace(".mp3", ""));
+            let songName = element.href.split('/').pop().replace(".mp3", "");
+            songs.push(songName);
         }
     }
 
